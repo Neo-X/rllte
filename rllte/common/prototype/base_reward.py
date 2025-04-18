@@ -135,6 +135,8 @@ class BaseReward(ABC):
                 ((x - self.obs_norm.mean.to(self.device)))
                 / th.sqrt(self.obs_norm.var.to(self.device))
             ).clip(-5, 5)
+        elif self.obs_norm_type == "none":
+            x
         else:
             x = x / 255.0 if len(self.obs_shape) > 2 else x
         return x
@@ -182,7 +184,6 @@ class BaseReward(ABC):
                         all_next_obs = th.stack(all_next_obs).float()
                         self.obs_norm.update(all_next_obs)
                         all_next_obs = []
-
     def watch(
         self,
         observations: th.Tensor,

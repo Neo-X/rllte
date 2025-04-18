@@ -113,20 +113,20 @@ class RND(BaseReward):
         """
         super().compute(samples)
         # get the number of steps and environments
-        (n_steps, n_envs) = samples.get("next_observations").size()[:2]
+        n_steps = samples.get("next_observations").size()[0]
         # get the next observations
         next_obs_tensor = samples.get("next_observations").to(self.device)
         # normalize the observations
         next_obs_tensor = self.normalize(next_obs_tensor)
         # compute the intrinsic rewards
-        intrinsic_rewards = th.zeros(size=(n_steps, n_envs)).to(self.device)
+        intrinsic_rewards = th.zeros(size=(n_steps, self.n_envs)).to(self.device)
         with th.no_grad():
             # get source and target features
             src_feats = self.predictor(next_obs_tensor.view(-1, *self.obs_shape))
             tgt_feats = self.target(next_obs_tensor.view(-1, *self.obs_shape))
             # compute the distance
             dist = F.mse_loss(src_feats, tgt_feats, reduction="none").mean(dim=1)
-            intrinsic_rewards = dist.view(n_steps, n_envs)
+            intrinsic_rewards = dist.view(n_steps, self.n_envs)
 
         # update the reward module
         if sync:

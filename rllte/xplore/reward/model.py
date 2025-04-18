@@ -101,6 +101,12 @@ class ObservationEncoder(nn.Module):
 
             self.trunk.append(init_(nn.Linear(n_flatten, latent_dim)))
             self.trunk.append(nn.ReLU())
+        elif encoder_model == "flat" and len(obs_shape) > 2:
+            self.trunk = nn.Sequential(
+                nn.Flatten(),
+                init_(nn.Linear(np.array(obs_shape).prod(), 256)), 
+                nn.ReLU()
+            )
         else:
             self.trunk = nn.Sequential(
                 init_(nn.Linear(obs_shape[0], 256)), 
