@@ -133,6 +133,7 @@ class RND(BaseReward):
             self.update(samples)
 
         # scale the intrinsic rewards
+        self.metrics["charts/intrinsic_rewards"].append([self.global_step, self.scale(intrinsic_rewards).mean()])
         return self.scale(intrinsic_rewards)
 
     def update(self, samples: Dict[str, th.Tensor]) -> None:
@@ -181,6 +182,6 @@ class RND(BaseReward):
             avg_loss.append(loss.item())
 
         try:
-            self.metrics["loss"].append([self.global_step, np.mean(avg_loss)])
+            self.metrics["losses/intrinsic_reward_loss"].append([self.global_step, np.mean(avg_loss)])
         except:
             pass

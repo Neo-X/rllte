@@ -95,7 +95,7 @@ class BaseReward(ABC):
         self.rff = RewardForwardFilter(gamma) if gamma is not None else None
         # training tracker
         self.global_step = 0
-        self.metrics = {"loss": [], "intrinsic_rewards": []}
+        self.metrics = {"losses/intrinsic_reward_loss": [], "charts/intrinsic_rewards": []}
 
     @property
     def weight(self) -> float:
@@ -118,7 +118,7 @@ class BaseReward(ABC):
         # scale the intrinsic rewards
         if self.rwd_norm_type == "rms":
             self.rwd_norm.update(rewards.ravel())
-            return (rewards / self.rwd_norm.std) * self.weight
+            return (rewards / (self.rwd_norm.std + 0.001)) * self.weight
         elif self.rwd_norm_type == "minmax":
             return (
                 (rewards - rewards.min())

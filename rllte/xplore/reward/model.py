@@ -104,8 +104,10 @@ class ObservationEncoder(nn.Module):
         elif encoder_model == "flat" and len(obs_shape) > 2:
             self.trunk = nn.Sequential(
                 nn.Flatten(),
-                init_(nn.Linear(np.array(obs_shape).prod(), 256)), 
-                nn.ReLU()
+                init_(nn.Linear(np.array(obs_shape).prod(), 512)), 
+                nn.ELU(),
+                init_(nn.Linear(512, 512)), 
+                nn.ReLU(),
             )
         else:
             self.trunk = nn.Sequential(
