@@ -133,7 +133,7 @@ class RND(BaseReward):
             self.update(samples)
 
         # scale the intrinsic rewards
-        self.metrics["charts/intrinsic_rewards"].append([self.global_step, self.scale(intrinsic_rewards).mean()])
+        self.metrics["charts/intrinsic_rewards"].append([self.global_step, self.scale(intrinsic_rewards).mean().cpu().numpy()])
         return self.scale(intrinsic_rewards)
 
     def update(self, samples: Dict[str, th.Tensor]) -> None:
