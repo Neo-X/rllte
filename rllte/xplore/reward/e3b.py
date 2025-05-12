@@ -230,4 +230,4 @@ class E3B(BaseReward):
             # record the loss
             avg_im_loss.append(im_loss.item())
         # save the average loss
-        self.metrics["loss"].append([self.global_step, np.mean(avg_im_loss)])
+        self.metrics["losses/intrinsic_reward_loss"].append([self.global_step, np.mean(avg_im_loss)])
